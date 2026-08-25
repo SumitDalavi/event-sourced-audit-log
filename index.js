@@ -24,4 +24,7 @@ async function updateSnapshot(entity_id) {
     }
     await pool.query('INSERT INTO projection_cache (entity_id, state) VALUES ($1, $2) ON CONFLICT (entity_id) DO UPDATE SET state = $2', [entity_id, JSON.stringify(currentState)]);
 }
-app.listen(3000);
+if (require.main === module) {
+    app.listen(3000, () => console.log('Audit Log running on 3000'));
+}
+module.exports = { app, pool, updateSnapshot };
