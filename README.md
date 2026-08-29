@@ -1,5 +1,8 @@
 # Event-Sourced Audit Log 📜
 
+> **Maturity:** Functional Prototype
+> _Working CQRS + event-sourcing implementation with cryptographic hash chaining. Postgres is mocked in tests; real Postgres path available via shared infra compose._
+
 > CQRS and Event Sourcing implementation for an immutable, cryptographically verifiable compliance audit log.
 
 ## The Problem
@@ -31,38 +34,44 @@ This project implements a production-grade microservice architecture designed to
 | State Management | All state is pushed to the Data Store/Cache to keep the API stateless and horizontally scalable |
 | Error Handling | Standardized JSON error responses with explicit error codes |
 
-## 🚀 Step-by-Step Setup
+## 🚀 Setup
 
+### Option A — Mocked Postgres (no Docker, fastest)
 ```bash
-# 1. Clone the repository
-git clone https://github.com/SumitDalavi/event-sourced-audit-log.git
-cd event-sourced-audit-log
-
-# 2. Build and start
-docker-compose up -d --build
-
-# 3. Verify it's running
-curl http://localhost:8080/health
+npm install
+node index.js
+# API available at http://localhost:3000
 ```
 
-The API is now available at **http://localhost:8080**
-
-## 🧪 Usage & Demo
-
+### Option B — Real Postgres (via shared portfolio infra)
 ```bash
-# Health Check
-curl http://localhost:8080/health
+# From workspace root
+docker compose -f ../docker-compose.infra.yml up -d postgres
 
-# Simulate Traffic
-curl -X POST http://localhost:8080/api/trigger -H "Content-Type: application/json" -d '{"test":"payload"}'
+# Then in this directory:
+export DATABASE_URL="postgres://portfolio:portfoliopass@localhost:5432/audit_log"
+npm install
+node index.js
 ```
 
 ## ✅ Verification
 
+```bash
+npm test
+```
+
+Expected:
+```
+PASS tests/api.test.js
+  ✓ appends genesis event with GENESIS previous_hash
+  ✓ chains subsequent events with valid crypto hashes
+Tests: 2 passed, 2 total
+```
+
 | Check | Command | Expected |
 |-------|---------|----------|
-| Health | `curl http://localhost:8080/health` | `{"status": "ok"}` |
-| Load | `make test` | All unit/integration tests pass |
+| Append event | `curl -X POST http://localhost:3000/events -H "Content-Type: application/json" -d '{"entity_id":"u1","event_type":"USER_CREATED","payload":{},"schema_version":"1.0"}'` | `{"status":"appended","hash":"...sha256..."}` |
+| Chain verification | Two POST requests with same `entity_id` | Second response has different hash, each embedding previous |
 
 ## 👨‍💻 Author
 **Sumit Dalavi** — Senior DevSecOps / Platform Engineer
@@ -105,9 +114,42 @@ npm run test
 
 ---
 
-## 5. Mock Boundaries (Audit Compliance)
+## 5. Mock Boundaries (Honest Scope)
 
-To comply with strict portfolio audit requirements, we explicitly define the boundaries of what is real vs. simulated:
+| What | Status | Details |
+|---|---|---|
+| Hash chaining logic | **Real** | SHA-256 via Node.js `crypto` — fully functional |
+| Advisory lock serialization | **Real** | `pg_advisory_xact_lock` — real Postgres feature (exercised with real DB) |
+| Postgres (tests) | **Mocked** | `pg` module is mocked in `tests/api.test.js` — real behavior not exercised in CI |
+| Postgres (production) | **Real** | Connects to `audit_log` DB via `docker-compose.infra.yml` |
+| Projection cache | **Mocked in tests** | `pool.query` mock returns `{ rows: [] }` for snapshot updates |
+| Authentication / TLS | **Not implemented** | Service runs unauthenticated; production use requires mTLS or JWT gateway |
 
-- **Fully Implemented:** The core state machine, API routes, database schemas, and integration tests are real and fully functional.
-- **Mocked / Demo Mode:** None. The event stream and projections are fully implemented over local SQLite.
+## 📚 Documentation
+
+- [Architecture](docs/architecture.md) — Mermaid diagram, data model, component table
+- [Runbook](docs/runbook.md) — Setup, test commands, failure modes
+- [Decisions](docs/decisions.md) — ADRs for hash chaining, advisory locks, test strategy
+- [Changelog](docs/changelog.md) — Change history
+
+## 🔗 Related Projects
+
+- [`nhi-agent-access-governance`](../nhi-agent-access-governance/) — This audit log pattern applies directly to NHI action auditing
+- [`ai-control-plane-demo`](../ai-control-plane-demo/) — Uses this service's audit concepts for LLM request tracing
+
+
+## 🚀 Step-by-Step Setup
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/SumitDalavi/event-sourced-audit-log.git
+cd event-sourced-audit-log
+
+# 2. Build and start
+docker-compose up -d --build
+
+# 3. Verify it's running
+curl http://localhost:8080/health
+```
+
+The API is now available at **http://localhost:8080**
