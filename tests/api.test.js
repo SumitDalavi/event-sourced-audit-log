@@ -35,7 +35,15 @@ jest.mock('pg', () => {
             }),
             release: jest.fn()
         }),
-        query: jest.fn(),
+        // Fix: pool.query (used by updateSnapshot) must also return { rows: [] }
+        // so the fire-and-forget projection update doesn't throw a TypeError
+        // when trying to iterate `.rows` on an undefined result.
+        query: jest.fn().mockImplementation(async (queryStr, params) => {
+            if (queryStr.includes('ORDER BY id ASC')) {
+                return { rows: [] };
+            }
+            return { rows: [] };
+        }),
         end: jest.fn()
     };
     return { Pool: jest.fn(() => mPool) };
