@@ -1,3 +1,6 @@
+> **NOTE:** This repository is an archival lab or partial prototype. It is not actively maintained and should not be used as a reference for production-grade deployments or performance benchmarks.
+
+
 # Event-Sourced Audit Log 📜
 
 > **Maturity:** Functional Prototype
@@ -13,7 +16,7 @@ Traditional CRUD databases overwrite historical state, making it impossible to a
 By relying on SQLite instead of a complex EventStoreDB, we achieve high-speed, cryptographically verifiable event persistence. Projections are rebuilt dynamically. Simple CRUD applications fail when subjected to high throughput, race conditions, or massive data sets.
 
 ## The Solution
-This project implements a production-grade microservice architecture designed to handle these specific edge cases. By utilizing advanced paradigms like idempotency keys, advisory locks, or optimized caching layers, this service guarantees data integrity under load.
+This project implements a robust microservice architecture designed to handle these specific edge cases. By utilizing advanced paradigms like idempotency keys, advisory locks, or optimized caching layers, this service guarantees data integrity under load.
 
 ```text
 ┌──────────────┐      ┌───────────────┐      ┌───────────────┐
@@ -78,7 +81,7 @@ Tests: 2 passed, 2 total
 [GitHub](https://github.com/SumitDalavi) | [LinkedIn](https://in.linkedin.com/in/sumit-dalavi-762838129)
 
 ---
-*Built with a focus on production-grade patterns, not toy demos.*
+*Built with a focus on robust patterns, not toy demos.*
 
 
 ---
