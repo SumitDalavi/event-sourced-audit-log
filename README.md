@@ -3,6 +3,9 @@
 
 # Event-Sourced Audit Log 📜
 
+[![Release](https://img.shields.io/github/v/release/SumitDalavi/event-sourced-audit-log?color=blue&logo=github)](https://github.com/SumitDalavi/event-sourced-audit-log/releases)
+[![SBOM](https://img.shields.io/badge/SBOM-SPDX%20JSON-blueviolet?logo=spdx)](https://github.com/SumitDalavi/event-sourced-audit-log/releases)
+
 > **Maturity:** Functional Prototype
 > _Working CQRS + event-sourcing implementation with cryptographic hash chaining. Postgres is mocked in tests; real Postgres path available via shared infra compose._
 
@@ -156,3 +159,24 @@ curl http://localhost:8080/health
 ```
 
 The API is now available at **http://localhost:8080**
+
+## Release & Verification
+
+The project includes an automated DevSecOps release pipeline (`.github/workflows/release.yml`) triggered on semantic version tags (`v*.*.*`).
+
+Each release automatically:
+1. Executes test suite gates.
+2. Builds the container image.
+3. Performs vulnerability scanning via Trivy.
+4. Generates an SPDX SBOM (`sbom.spdx.json`) using Anchore Syft.
+5. Publishes a GitHub Release with attached SBOM.
+
+### Verifying the Release
+```bash
+# Verify release via GitHub CLI
+gh release view v0.1.0 --repo SumitDalavi/event-sourced-audit-log
+
+# Download and inspect SBOM
+gh release download v0.1.0 --repo SumitDalavi/event-sourced-audit-log --pattern "sbom.spdx.json"
+cat sbom.spdx.json | jq .
+```
