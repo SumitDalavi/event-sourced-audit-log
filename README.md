@@ -1,14 +1,14 @@
 > **NOTE:** This repository is an archival lab or partial prototype. It is not actively maintained and should not be used as a reference for production-grade deployments or performance benchmarks.
 
-
 # Event-Sourced Audit Log 📜
 
-[![Release](https://img.shields.io/github/v/release/SumitDalavi/event-sourced-audit-log?color=blue&logo=github)](https://github.com/SumitDalavi/event-sourced-audit-log/releases)
+[![CI Pipeline](https://github.com/SumitDalavi/event-sourced-audit-log/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/SumitDalavi/event-sourced-audit-log/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/SumitDalavi/event-sourced-audit-log?color=0969da&label=release&logo=github)](https://github.com/SumitDalavi/event-sourced-audit-log/releases)
 [![Release Workflow](https://github.com/SumitDalavi/event-sourced-audit-log/actions/workflows/release.yml/badge.svg)](https://github.com/SumitDalavi/event-sourced-audit-log/actions/workflows/release.yml)
-[![SBOM](https://img.shields.io/badge/SBOM-SPDX%20JSON-blueviolet?logo=spdx)](https://github.com/SumitDalavi/event-sourced-audit-log/releases)
-
-[![Release](https://img.shields.io/github/v/release/SumitDalavi/event-sourced-audit-log?color=blue&logo=github)](https://github.com/SumitDalavi/event-sourced-audit-log/releases)
-[![SBOM](https://img.shields.io/badge/SBOM-SPDX%20JSON-blueviolet?logo=spdx)](https://github.com/SumitDalavi/event-sourced-audit-log/releases)
+[![GHCR Container](https://img.shields.io/badge/ghcr.io-v0.2.0-blue?logo=docker&logoColor=white)](https://github.com/SumitDalavi/event-sourced-audit-log/pkgs/container/event-sourced-audit-log)
+[![Node.js](https://img.shields.io/badge/Node.js-20+-339933?logo=nodedotjs&logoColor=white)](https://nodejs.org)
+[![SBOM](https://img.shields.io/badge/SBOM-SPDX%202.3-blueviolet?logo=spdx)](https://github.com/SumitDalavi/event-sourced-audit-log/releases/tag/v0.2.0)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
 > **Maturity:** Functional Prototype
 > _Working CQRS + event-sourcing implementation with cryptographic hash chaining. Postgres is mocked in tests; real Postgres path available via shared infra compose._
@@ -90,7 +90,6 @@ Tests: 2 passed, 2 total
 ---
 *Built with a focus on robust patterns, not toy demos.*
 
-
 ---
 
 ## 3. 🔬 Evidence & Benchmarks (Audit Added)
@@ -171,7 +170,6 @@ Enterprise deployment with production-grade backends, security scans, and contai
 
 - [`nhi-agent-access-governance`](../nhi-agent-access-governance/) — This audit log pattern applies directly to NHI action auditing
 - [`ai-control-plane-demo`](../ai-control-plane-demo/) — Uses this service's audit concepts for LLM request tracing
-
 
 ## 🚀 Step-by-Step Setup
 
