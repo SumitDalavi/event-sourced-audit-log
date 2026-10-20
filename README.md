@@ -135,6 +135,31 @@ npm run test
 | Projection cache | **Mocked in tests** | `pool.query` mock returns `{ rows: [] }` for snapshot updates |
 | Authentication / TLS | **Not implemented** | Service runs unauthenticated; production use requires mTLS or JWT gateway |
 
+## 🚀 Progressive Credential Loading & Execution Tiers
+
+This project implements **Progressive Credential Loading (PCL)**, allowing it to run immediately out-of-the-box without external dependencies while seamlessly upgrading as credentials are provided.
+
+### Tier 1: Zero-Config Mock Mode (Default)
+Ideal for CI, testing, and rapid local evaluation.
+- **Execution:** Run with default configuration (`cp .env.example .env`). Zero API keys, databases, or cloud credentials required.
+- **Fallback Behavior:** In-memory caches, deterministic offline heuristics, mock vector embeddings, and local mock storage are automatically used.
+- **Health Verification:** Endpoints report `{"mode": "mock"}` for unconfigured dependencies.
+
+### Tier 2: Local Development with Live Services
+Connect specific external services while keeping others mocked.
+- **Execution:** Provide credentials in `.env` for the services you want active (e.g., `DATABASE_URL`).
+- **Progressive Upgrade:** The runtime inspects environment variables on boot and dynamically promotes only configured modules to live mode.
+- **Safe Fallback:** Any missing credentials automatically remain on mock fallbacks with no crashes or missing service errors.
+
+### Tier 3: Production Hardened
+Enterprise deployment with production-grade backends, security scans, and container distributions.
+- **OCI Container Image:** Pre-built, multi-arch image on GitHub Container Registry:
+  ```bash
+  docker pull ghcr.io/sumitdalavi/event-sourced-audit-log:v0.2.0
+  ```
+- **Production Orchestration:** Mount secrets via Kubernetes Secrets or cloud secret managers with atomic config reload support.
+- **Release Verification:** Checksums and SPDX SBOM available on [GitHub Releases](https://github.com/SumitDalavi/event-sourced-audit-log/releases).
+
 ## 📚 Documentation
 
 - [Architecture](docs/architecture.md) — Mermaid diagram, data model, component table
