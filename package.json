@@ -1,6 +1,6 @@
 {
   "name": "event-sourced-audit-log",
-  "version": "1.0.0",
+  "version": "0.2.0",
   "description": "Event Sourced Audit Log",
   "main": "index.js",
   "scripts": {
