@@ -11,14 +11,10 @@
 > CQRS and Event Sourcing implementation for an immutable, cryptographically verifiable compliance audit log.
 
 ## The Problem
-## Problem Statement
-Traditional CRUD databases overwrite historical state, making it impossible to answer 'who changed what, and when?' for compliance forensics.
+Traditional CRUD databases overwrite historical state, making it impossible to answer "who changed what, and when?" for compliance forensics and regulatory auditing.
 
 ## Architecture & Solution
-By relying on SQLite instead of a complex EventStoreDB, we achieve high-speed, cryptographically verifiable event persistence. Projections are rebuilt dynamically. Simple CRUD applications fail when subjected to high throughput, race conditions, or massive data sets.
-
-## The Solution
-This project implements a robust microservice architecture designed to handle these specific edge cases. By utilizing advanced paradigms like idempotency keys, advisory locks, or optimized caching layers, this service guarantees data integrity under load.
+This service implements CQRS and Event Sourcing with cryptographic hash chaining. Every state mutation is recorded as an immutable append-only event containing a SHA-256 hash of the preceding event, ensuring verifiable tamper-evidence. Read projections are updated dynamically to support high-throughput queries without compromising audit integrity.
 
 ```text
 ┌──────────────┐      ┌───────────────┐      ┌───────────────┐
