@@ -8,9 +8,6 @@
 [![SBOM](https://img.shields.io/badge/SBOM-SPDX%202.3-blueviolet?logo=spdx)](https://github.com/SumitDalavi/event-sourced-audit-log/releases/tag/v0.2.0)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
-> **Maturity:** Functional Prototype
-> _Working CQRS + event-sourcing implementation with cryptographic hash chaining. Postgres is mocked in tests; real Postgres path available via shared infra compose._
-
 > CQRS and Event Sourcing implementation for an immutable, cryptographically verifiable compliance audit log.
 
 ## The Problem
