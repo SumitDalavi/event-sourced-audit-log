@@ -74,6 +74,38 @@ Tests: 2 passed, 2 total
 | Append event | `curl -X POST http://localhost:3000/events -H "Content-Type: application/json" -d '{"entity_id":"u1","event_type":"USER_CREATED","payload":{},"schema_version":"1.0"}'` | `{"status":"appended","hash":"...sha256..."}` |
 | Chain verification | Two POST requests with same `entity_id` | Second response has different hash, each embedding previous |
 
+
+## 🚀 Declarative Continuous GitOps Deployment
+
+This system is continuously deployed across multi-cluster environments via **ArgoCD v2.10+** and **Kustomize** overlays managed by the [`multi-cluster-gitops-promotion`](https://github.com/SumitDalavi/multi-cluster-gitops-promotion) catalog hub:
+
+```
+deploy/
+├── k8s/
+│   ├── base/                  # Baseline Deployment, Service, ServiceAccount (PodSecurity restricted)
+│   └── overlays/
+│       ├── dev/               # 1 replica, 300m/256Mi, automated self-healing
+│       ├── staging/           # 2 replicas, 500m/512Mi, automated self-healing
+│       └── prod/              # 3 replicas, 1000m/1Gi, gated PR promotion
+└── argocd/
+    ├── application.yaml       # Default staging Application CRD
+    ├── application-dev.yaml   # In-cluster dev Application CRD
+    ├── application-prod.yaml  # Production gated Application CRD
+    └── values-override.yaml   # Helm/Kustomize values overrides
+```
+
+### Local Manifest Dry-Run Validation
+```bash
+# Validate Dev Overlay
+kubectl kustomize deploy/k8s/overlays/dev
+
+# Validate Staging Overlay
+kubectl kustomize deploy/k8s/overlays/staging
+
+# Validate Production Overlay
+kubectl kustomize deploy/k8s/overlays/prod
+```
+
 ## 👨‍💻 Author
 **Sumit Dalavi** — Senior DevSecOps / Platform Engineer
 [GitHub](https://github.com/SumitDalavi) | [LinkedIn](https://in.linkedin.com/in/sumit-dalavi-762838129)
@@ -197,6 +229,38 @@ gh release view v0.2.0 --repo SumitDalavi/event-sourced-audit-log
 # Download and inspect SBOM
 gh release download v0.2.0 --repo SumitDalavi/event-sourced-audit-log --pattern "sbom.spdx.json"
 cat sbom.spdx.json | jq .
+```
+
+
+## 🚀 Declarative Continuous GitOps Deployment
+
+This system is continuously deployed across multi-cluster environments via **ArgoCD v2.10+** and **Kustomize** overlays managed by the [`multi-cluster-gitops-promotion`](https://github.com/SumitDalavi/multi-cluster-gitops-promotion) catalog hub:
+
+```
+deploy/
+├── k8s/
+│   ├── base/                  # Baseline Deployment, Service, ServiceAccount (PodSecurity restricted)
+│   └── overlays/
+│       ├── dev/               # 1 replica, 300m/256Mi, automated self-healing
+│       ├── staging/           # 2 replicas, 500m/512Mi, automated self-healing
+│       └── prod/              # 3 replicas, 1000m/1Gi, gated PR promotion
+└── argocd/
+    ├── application.yaml       # Default staging Application CRD
+    ├── application-dev.yaml   # In-cluster dev Application CRD
+    ├── application-prod.yaml  # Production gated Application CRD
+    └── values-override.yaml   # Helm/Kustomize values overrides
+```
+
+### Local Manifest Dry-Run Validation
+```bash
+# Validate Dev Overlay
+kubectl kustomize deploy/k8s/overlays/dev
+
+# Validate Staging Overlay
+kubectl kustomize deploy/k8s/overlays/staging
+
+# Validate Production Overlay
+kubectl kustomize deploy/k8s/overlays/prod
 ```
 
 ## 👨‍💻 Author
